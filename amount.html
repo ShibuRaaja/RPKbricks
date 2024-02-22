@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPK BRICKS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color:rgb(231, 225, 240);">
+    <header>
+        <h1 style="color:rgb(252, 42, 42); font-family: Cambria; text-align: left;">RPK Bricks</h1>       
+    </header>
+    <div id="app1">
+        <h3 style="color:rgb(255, 0, 47);">Amount for Bricks 2024</h3>
+        <table id="spreadsheet1">
+            <!-- The table content will be generated dynamically using JavaScript -->
+        </table>          
+    </div>
+    <script>
+        function initSpreadsheet1(month) {
+    const key = `SpreadSheet1Data_${month}`;
+    const storedData = JSON.parse(localStorage.getItem(key)) || getDefaultData();
+
+    const spreadsheet1 = document.getElementById('spreadsheet1');
+    for (let row = 0; row < storedData.length; row++) {
+        const currentRow = spreadsheet1.insertRow();
+
+        for (let col = 0; col < storedData[row].length; col++) {
+            const currentCell = currentRow.insertCell(col);
+
+            if (row === 0 || col === 0) {
+                // Header cells or cells in the first column
+                currentCell.innerHTML = `<strong><input type="text" value="${storedData[row][col]}" oninput="updateCellValue(this, '${key}', ${row}, ${col})"></strong>`;
+            } else {
+                // Data cells
+                currentCell.innerHTML = `<input type="text" value="${storedData[row][col]}" oninput="updateCellValue(this, '${key}', ${row}, ${col})">`;
+            }
+        }
+    }
+
+    // Calculate totals after initializing the spreadsheet
+    calculateTotals(key);
+}
+
+function updateCellValue(input, key, row, col) {
+    
+    const value = input.value;
+    const spreadsheet1Data = JSON.parse(localStorage.getItem(key)) || getDefaultData();
+
+    spreadsheet1Data[row][col] = value;
+
+    localStorage.setItem(key, JSON.stringify(spreadsheet1Data));
+
+    // Recalculate totals after updating a cell value
+    calculateTotals(key);
+}
+
+function calculateTotals(key) {
+    const spreadsheet1Data = JSON.parse(localStorage.getItem(key)) || getDefaultData();
+    const totalsRow = spreadsheet1Data[spreadsheet1Data.length - 1];
+
+    // Initialize sum values for each column
+    for (let col = 3; col < totalsRow.length; col++) {
+        totalsRow[col] = 0;
+    }
+
+    // Calculate the sum of each column
+    for (let row = 2; row < spreadsheet1Data.length - 1; row++) {
+        for (let col = 3; col < spreadsheet1Data[row].length; col++) {
+            totalsRow[col] += spreadsheet1Data[row][col] === '' ? 0 : parseInt(spreadsheet1Data[row][col]);
+        }
+    }
+
+    // Update the 'Total' row in the spreadsheet
+    const spreadsheet1 = document.getElementById('spreadsheet1');
+    for (let col = 1; col < totalsRow.length; col++) {
+        spreadsheet1.rows[spreadsheet1.rows.length - 1].cells[col].innerHTML = `<strong>${totalsRow[col]}</strong>`;
+    }
+
+    // Update the totals in local storage
+    localStorage.setItem(key, JSON.stringify(spreadsheetData));
+}
+
+// Helper function to get default data structure
+function getDefaultData() {
+    
+    return [['Date','Name','Message','Amount','','','','','',''],
+            ['', '', '', '1', '2', '3','4', '5', '6', '7','8'],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''], 
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''], 
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['', '', '', '', '', '', '','', '', '', ''], 
+            ['', '', '', '', '', '', '','', '', '', ''],
+            ['Total', '', '', '', '', '', '','', '', '', '']];
+}
+
+
+document.addEventListener('DOMContentLoaded', () => initSpreadsheet1('Amouuuu'));
+
+    </script>
+</body>
+</html>
